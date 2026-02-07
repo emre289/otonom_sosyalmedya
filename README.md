@@ -41,7 +41,24 @@ C) ❌ Hayır, iptal
 Heygen ve Remotion adımları uzun sürebileceği için agent şu şekilde davranır:
 
 - **Heygen aşaması:**
-  - Video üretimi başladıktan sonra agent **her 1 dakikada bir** durum kontrolü yapar.
+
+  ### ⛔ KRİTİK UYARI — HEYGEN İSTEK LİMİTİ ⛔
+
+  **Agent, HeyGen API'ye TEK BİR İSTEK atar. İkinci istek YASAKTIR.**
+
+  Kurallar:
+  1. Agent, HeyGen'e **yalnızca 1 (bir) kez** video oluşturma isteği gönderir.
+  2. İstek gönderildikten sonra agent **bekler**. Durum kontrolünü (status polling) her 1 dakikada bir yapar ama **yeni bir video oluşturma isteği KESINLIKLE göndermez**.
+  3. Herhangi bir hata alınırsa (timeout, API hatası, 4xx, 5xx vb.) agent **ikinci bir istek ATMAZ**. Bunun yerine:
+     - Hatayı olduğu gibi kullanıcıya bildirir.
+     - Kullanıcıdan talimat bekler.
+     - Kullanıcı açıkça "tekrar dene" demedikçe agent hiçbir şekilde yeniden istek göndermez.
+  4. **Retry, tekrar deneme, otomatik yeniden gönderim gibi davranışlar tamamen yasaktır.**
+  5. Bu kural istisnasızdır. Agent ne kadar emin olursa olsun, kendi başına ikinci bir HeyGen isteği atamaz.
+
+  > **Neden?** HeyGen API'de her istek kredi harcar. Gereksiz veya tekrarlanan istekler doğrudan maliyet oluşturur. Bu yüzden agent **tek atış** kuralına uymak zorundadır.
+
+  - Video üretimi başladıktan sonra agent **her 1 dakikada bir** durum kontrolü yapar (bu sadece status check'tir, yeni istek DEĞİLDİR).
   - Video biter bitmez kullanıcıdan beklemeden **sonucu iletir**.
   - Ardından onay ister.
 
