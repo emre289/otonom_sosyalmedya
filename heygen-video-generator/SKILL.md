@@ -33,4 +33,4 @@ python main.py
 Not: `main.py` içindeki `dimension` alanını 1080x1920 olarak ayarlayın.
 
 ## Entegrasyon
-- Heygen çıktısı Remotion katmanı içinde merkezde kullanılır.
+- Heygen çıktısı doğrudan nihai video çıktısı olarak kullanılır.
